@@ -1,13 +1,10 @@
 /* jshint esversion: 6, multistr: true */
 /* global require:false, phantom:false */
-
-
 /* 
 Simplified example using phantomjs directly
 A local web service that determines google ad coverage of a URL
 http://127.0.0.1:8585/?url=http://espn.go.com,http://blogs.disney.com
 */
-
 //includes web server modules
 var server = require('webserver').create();
 require('system');
@@ -18,7 +15,11 @@ phantom.onError = function(msg, trace) {
   if (trace && trace.length) {
     msgStack.push('TRACE:');
     trace.forEach(function(t) {
-      msgStack.push(' -> ' + (t.file || t.sourceURL) + ': ' + t.line + (t.function ?  in function ' + t.function +' ' : ''));
+      msgStack.push(' -> ' +
+        (t.file || t.sourceURL) +
+        ': ' +
+        t.line +
+        (t.function ? ' in function ' + t.function+' ' : ''));
     });
   }
   console.error(msgStack.join('\n'));
@@ -28,7 +29,7 @@ phantom.onError = function(msg, trace) {
 
 console.info('set up onError');
 
-//define ip and port to web service
+// define ip and port to web service
 var port = '8080';
 
 phantom.injectJs('es6-promise.js');
@@ -52,10 +53,10 @@ function getAdArea() {
         H = window.innerHeight,
         W = window.innerWidth,
         r = el.getBoundingClientRect();
-      //console.info('GEOM', elH, elW, H, W, r);
+      // console.info('GEOM', elH, elW, H, W, r);
       var area = Math.max(0, r.top > 0 ? Math.min(elH, H - r.top) : (r.bottom < H ? r.bottom : H)) *
         Math.max(0, r.left > 0 ? Math.min(elW, W - r.left) : (r.right < W ? r.right : W));
-      //console.log('AREA', el.id, area);
+      // console.log('AREA', el.id, area);
       if (area) {
         result[el.id] = {
           'area_visible': area,
@@ -68,7 +69,7 @@ function getAdArea() {
 }
 
 /**
- Promise-wrapped page inspection looking for visible google ad areas
+ * Promise-wrapped page inspection looking for visible google ad areas
  */
 function inspectPage(url) {
   return new Promise(function(resolve, reject) {
@@ -109,8 +110,8 @@ server.listen(port, function(request, response) {
   // http://espn.go.com,http://blogs.disney.com,http://home.bt.com
   var urls = getParameterByName('url', request.url).split(',');
   var inspectionCalls = urls.map(function(url) {
-      return inspectPage(url);
-    });
+    return inspectPage(url);
+  });
 
   Promise.all(inspectionCalls).then(function(arr) {
     var result = {};
@@ -120,8 +121,8 @@ server.listen(port, function(request, response) {
     console.log('FULL RESULT:' + JSON.stringify(result, null, 2));
     response.write(JSON.stringify(result, null, 2));
     response.closeGracefully();
-    //console.log('Exiting phantom');
-    //phantom.exit();
+    // console.log('Exiting phantom');
+    // phantom.exit();
   });
 
 });
