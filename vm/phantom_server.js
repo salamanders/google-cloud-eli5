@@ -69,7 +69,7 @@ function inspectPage(url, userOptions) {
 
   // Browser defaults, good place to expand to android, iphone6s, etc.
   switch (userOptions.browser) {
-    case 'iphone5':
+    case 'safari-iphone5':
       mergeObjects(options, {
         page: {
           viewportSize: {
@@ -78,6 +78,20 @@ function inspectPage(url, userOptions) {
           },
           settings: {
             userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+          }
+        }
+      });
+      break;
+
+    case 'chrome-nexus5':
+      mergeObjects(options, {
+        page: {
+          viewportSize: {
+            width: 360,
+            height: 640
+          },
+          settings: {
+            userAgent: ' Mozilla/5.0 (Linux; Android 4.4.2; Nexus 5 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.99 Mobile Safari/537.36'
           }
         }
       });
