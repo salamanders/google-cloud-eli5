@@ -1,6 +1,6 @@
 # google-cloud-eli5
 
-All documentation is on the [project wiki](https://github.com/benmhill/google-cloud-eli5/wiki).
+All documentation is on the [project wiki](https://github.com/salamanders/google-cloud-eli5/wiki).
 
 A tutorial on using Google Cloud services.  
 
