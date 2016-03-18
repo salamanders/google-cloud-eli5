@@ -1,16 +1,22 @@
 # docker running phantomjs and casperjs
-
-FROM gcr.io/google_appengine/jetty9-compat
+FROM debian:latest
+# FROM gcr.io/google_appengine/python-compat
 
 MAINTAINER Benjamin Hill <benhill@google.com>
 
 # Env
 ENV PHANTOMJS_VERSION 2.1.1-linux-x86_64
 
-# possibly libfontconfig1 without the 1
-ENV BUILD_PACKAGES bzip2 git libfontconfig1 python ca-certificates
-
-RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y $BUILD_PACKAGES 
+# Don't do apt-get dist-upgrade as per dockerfile_best-practices
+# TODO(benhill) would it help to do --no-install-recommends
+RUN apt-get update -y && apt-get install -y \
+  bzip2 \
+  ca-certificates \
+  git \
+  libfontconfig1 \
+  python \
+  wget \
+&& rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /srv/var && \
   wget -q -O /tmp/phantomjs-$PHANTOMJS_VERSION.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-$PHANTOMJS_VERSION.tar.bz2 && \
@@ -30,7 +36,10 @@ RUN apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /usr/share/doc/* 
 
-COPY . /app/
+WORKDIR /app
 
-# Default command
-CMD ["/usr/bin/phantomjs", "python_server.js"]
+COPY . .
+
+EXPOSE 8080
+
+CMD ["/usr/bin/phantomjs", "/app/phantom_server.js"]

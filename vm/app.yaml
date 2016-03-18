@@ -13,21 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# FILE FROM https://raw.githubusercontent.com/GoogleCloudPlatform/getting-started-java/master/helloworld-servlet/src/main/appengine/app.yaml
+# FILE FROM https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/managed_vms/kinto/app.yaml
 
-runtime: java
+runtime: custom
 vm: true
 
-handlers:
-- url: /.*
-  script: this field is required, but ignored
-  secure: always  # Require HTTPS
+# does not respond 404 to /_ah/health (sends a redirect)
+vm_health_check:
+    enable_health_check: False
 
-runtime_config:  # Optional
-  jdk: openjdk8
-  server: jetty9
+# handlers:
+#- url: /.*
+#  script: this field is required, but ignored
+#  secure: always  # Require HTTPS
 
 instance_class: B1
 
 manual_scaling:
   instances: 1
+
+# Temporary setting to keep gcloud from uploading the virtualenv
+skip_files:
+  - ^v?env$
